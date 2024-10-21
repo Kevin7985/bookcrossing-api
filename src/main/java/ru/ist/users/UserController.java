@@ -3,8 +3,10 @@ package ru.ist.users;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.ist.users.dto.LogDataDto;
 import ru.ist.users.dto.NewUserDto;
 import ru.ist.users.dto.UserDto;
+import ru.ist.users.dto.UserLoginDto;
 
 import java.util.UUID;
 
@@ -16,8 +18,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/auth")
-    public void loginUser() {
-
+    public UserLoginDto loginUser(@RequestBody LogDataDto logDataDto) {
+        return userService.authUser(logDataDto);
     }
 
     @PostMapping("/register")
