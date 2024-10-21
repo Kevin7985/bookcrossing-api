@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.ist.exceptions.model.ApiError;
+import ru.ist.users.exception.UserNotFoundException;
 
 @RestControllerAdvice
 public class ExceptionsHandler {
@@ -16,6 +17,17 @@ public class ExceptionsHandler {
     public ApiError dataIntegrityViolationExceptionHalder(Exception e) {
         return new ApiError(
                 HttpStatus.CONFLICT.name(),
+                e.getMessage()
+        );
+    }
+
+    @ExceptionHandler({
+            UserNotFoundException.class
+    })
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiError entityNotFoundExceptionHandler(Exception e) {
+        return new ApiError(
+                HttpStatus.NOT_FOUND.name(),
                 e.getMessage()
         );
     }
