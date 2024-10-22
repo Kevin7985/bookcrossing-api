@@ -59,6 +59,8 @@ public class UserServiceImpl implements UserService {
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new UserNotFoundException("Пользователь с данным ID не найден"));
 
+            redis.opsForValue().set("cache_user_" + user.getId().toString(), gson.toJson(mapperService.toUserDto(user)), Duration.ofMinutes(10));
+
             return mapperService.toUserDto(user);
         }
     }
