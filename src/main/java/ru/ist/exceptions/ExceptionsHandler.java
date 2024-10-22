@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.ist.exceptions.baseExceptions.ForbiddenException;
 import ru.ist.exceptions.model.ApiError;
 import ru.ist.users.exception.UserNotFoundException;
 
@@ -28,6 +29,17 @@ public class ExceptionsHandler {
     public ApiError entityNotFoundExceptionHandler(Exception e) {
         return new ApiError(
                 HttpStatus.NOT_FOUND.name(),
+                e.getMessage()
+        );
+    }
+
+    @ExceptionHandler({
+            ForbiddenException.class
+    })
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ApiError forbiddenExceptionHandler(Exception e) {
+        return new ApiError(
+                HttpStatus.FORBIDDEN.name(),
                 e.getMessage()
         );
     }

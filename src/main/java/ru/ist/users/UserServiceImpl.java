@@ -2,7 +2,9 @@ package ru.ist.users;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import ru.ist.exceptions.baseExceptions.ForbiddenException;
 import ru.ist.service.MapperService;
 import ru.ist.users.dto.LogDataDto;
 import ru.ist.users.dto.NewUserDto;
@@ -51,5 +53,18 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException("Пользователь с данным ID не найден"));
 
         return mapperService.toUserDto(user);
+    }
+
+    @Override
+    public void deleteUserById(Authentication auth, UUID userId) {
+        UUID authId = UUID.fromString((String) auth.getPrincipal());
+        if (!authId.equals(userId)) {
+            throw new ForbiddenException("Данное действие недоступно с данным токеном");
+        }
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("Пользователь с данным ID не найден"));
+
+        userRepository.deleteById(userId);
     }
 }

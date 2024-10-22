@@ -50,6 +50,6 @@ public class UserController {
     @DeleteMapping("/{user_id}")
     @SecurityRequirement(name = "Bearer Authentication")
     public void deleteUserById(Authentication auth, @PathVariable UUID user_id) {
-
+        userService.deleteUserById(auth, user_id);
     }
 }
