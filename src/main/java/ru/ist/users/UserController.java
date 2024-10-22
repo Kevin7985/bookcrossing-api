@@ -1,5 +1,6 @@
 package ru.ist.users;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -28,16 +29,25 @@ public class UserController {
     }
 
     @GetMapping("/{user_id}")
+    @SecurityRequirement(name = "Bearer Authentication")
     public UserDto getUserById(@PathVariable UUID user_id) {
         return null;
     }
 
     @PatchMapping("/{user_id}")
+    @SecurityRequirement(name = "Bearer Authentication")
     public UserDto updateUserById(@PathVariable UUID user_id) {
         return null;
     }
 
+    @PatchMapping("/{user_id}/change-password")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public UserDto updateUserPasswordById(@PathVariable UUID user_id) {
+        return null;
+    }
+
     @DeleteMapping("/{user_id}")
+    @SecurityRequirement(name = "Bearer Authentication")
     public void deleteUserById(@PathVariable UUID user_id) {
 
     }
