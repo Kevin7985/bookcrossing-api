@@ -65,6 +65,13 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("Пользователь с данным ID не найден"));
 
+        redis.keys("auth_token_bookcrossing.*").stream().forEach(key -> {
+            String id = redis.opsForValue().get(key);
+            if (id.equals(userId.toString())) {
+                redis.opsForValue().getAndDelete(key);
+            }
+        });
+        
         userRepository.deleteById(userId);
     }
 }

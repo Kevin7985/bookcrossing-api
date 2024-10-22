@@ -52,11 +52,6 @@ public class AuthService {
         try {
             String userId = redis.opsForValue().get("auth_token_" + token);
             if (userId != null) {
-                Optional<User> user = userRepository.findById(UUID.fromString(userId));
-                if (user.isEmpty()) {
-                    return Optional.empty();
-                }
-
                 List<Role> roles = new ArrayList<>(List.of(Role.USER));
                 Authentication authentication = createAuth(userId, roles);
                 return Optional.of(authentication);
