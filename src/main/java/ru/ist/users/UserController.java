@@ -3,6 +3,7 @@ package ru.ist.users;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.ist.users.dto.LogDataDto;
 import ru.ist.users.dto.NewUserDto;
@@ -30,25 +31,25 @@ public class UserController {
 
     @GetMapping("/{user_id}")
     @SecurityRequirement(name = "Bearer Authentication")
-    public UserDto getUserById(@PathVariable UUID user_id) {
-        return null;
+    public UserDto getUserById(Authentication auth, @PathVariable UUID user_id) {
+        return userService.getUserById(user_id);
     }
 
     @PatchMapping("/{user_id}")
     @SecurityRequirement(name = "Bearer Authentication")
-    public UserDto updateUserById(@PathVariable UUID user_id) {
+    public UserDto updateUserById(Authentication auth, @PathVariable UUID user_id) {
         return null;
     }
 
     @PatchMapping("/{user_id}/change-password")
     @SecurityRequirement(name = "Bearer Authentication")
-    public UserDto updateUserPasswordById(@PathVariable UUID user_id) {
+    public UserDto updateUserPasswordById(Authentication auth, @PathVariable UUID user_id) {
         return null;
     }
 
     @DeleteMapping("/{user_id}")
     @SecurityRequirement(name = "Bearer Authentication")
-    public void deleteUserById(@PathVariable UUID user_id) {
+    public void deleteUserById(Authentication auth, @PathVariable UUID user_id) {
 
     }
 }

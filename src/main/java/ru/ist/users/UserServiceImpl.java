@@ -14,6 +14,8 @@ import ru.ist.utils.PasswordHash;
 import ru.ist.utils.StringGenerator;
 
 import java.time.Duration;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -41,5 +43,13 @@ public class UserServiceImpl implements UserService {
         redis.opsForValue().set("auth_token_" + userLoginDto.getToken(), userLoginDto.getUserId().toString(), Duration.ofHours(24));
 
         return userLoginDto;
+    }
+
+    @Override
+    public UserDto getUserById(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("Пользователь с данным ID не найден"));
+
+        return mapperService.toUserDto(user);
     }
 }

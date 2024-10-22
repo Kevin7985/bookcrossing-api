@@ -50,7 +50,7 @@ public class AuthService {
 
     private Optional<Authentication> checkToken(String token) {
         try {
-            String userId = redis.opsForValue().get(token);
+            String userId = redis.opsForValue().get("auth_token_" + token);
             if (userId != null) {
                 Optional<User> user = userRepository.findById(UUID.fromString(userId));
                 if (user.isEmpty()) {
