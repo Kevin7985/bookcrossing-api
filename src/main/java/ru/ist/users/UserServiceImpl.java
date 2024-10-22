@@ -1,5 +1,6 @@
 package ru.ist.users;
 
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
@@ -16,12 +17,12 @@ import ru.ist.utils.PasswordHash;
 import ru.ist.utils.StringGenerator;
 
 import java.time.Duration;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    private final Gson gson;
     private final RedisTemplate<String, String> redis;
     private final UserRepository userRepository;
     private final MapperService mapperService;
@@ -31,6 +32,7 @@ public class UserServiceImpl implements UserService {
         User user = mapperService.toUser(userDto);
         user = userRepository.save(user);
 
+        redis.opsForValue().set("cache_user_" + user.getId().toString(), gson.toJson(mapperService.toUserDto(user)), Duration.ofMinutes(10));
         return mapperService.toUserDto(user);
     }
 
@@ -43,16 +45,22 @@ public class UserServiceImpl implements UserService {
 
         UserLoginDto userLoginDto = new UserLoginDto(user.getId(), StringGenerator.generateToken(), Duration.ofHours(24).toSeconds());
         redis.opsForValue().set("auth_token_" + userLoginDto.getToken(), userLoginDto.getUserId().toString(), Duration.ofHours(24));
+        redis.opsForValue().set("cache_user_" + user.getId().toString(), gson.toJson(mapperService.toUserDto(user)), Duration.ofMinutes(10));
 
         return userLoginDto;
     }
 
     @Override
     public UserDto getUserById(UUID userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("Пользователь с данным ID не найден"));
+        String userJson = redis.opsForValue().get("cache_user_" + userId.toString());
+        if (userJson != null) {
+            return gson.fromJson(userJson, UserDto.class);
+        } else {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new UserNotFoundException("Пользователь с данным ID не найден"));
 
-        return mapperService.toUserDto(user);
+            return mapperService.toUserDto(user);
+        }
     }
 
     @Override
@@ -71,7 +79,9 @@ public class UserServiceImpl implements UserService {
                 redis.opsForValue().getAndDelete(key);
             }
         });
-        
+
+        redis.opsForValue().getAndDelete("cache_user_" + userId);
+
         userRepository.deleteById(userId);
     }
 }
