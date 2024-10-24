@@ -43,4 +43,13 @@ public class AuthorServiceImpl implements AuthorService {
             return mapperService.toAuthorDto(author);
         }
     }
+
+    @Override
+    public void deleteAuthorById(UUID authorId) {
+        Author author = authorRepository.findById(authorId)
+                .orElseThrow(() -> new AuthorNotFoundException("Автор с данным id не найден"));
+
+        redis.opsForValue().getAndDelete("cache_author_" + authorId);
+        authorRepository.deleteById(authorId);
+    }
 }

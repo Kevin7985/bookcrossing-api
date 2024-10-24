@@ -28,4 +28,10 @@ public class AuthorController {
     public AuthorDto getAuthorById(Authentication auth, @PathVariable UUID authorId) {
         return authorService.getAuthorById(authorId);
     }
+
+    @DeleteMapping("/{authorId}")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public void deleteAuthorById(Authentication auth, @PathVariable UUID authorId) {
+        authorService.deleteAuthorById(authorId);
+    }
 }
