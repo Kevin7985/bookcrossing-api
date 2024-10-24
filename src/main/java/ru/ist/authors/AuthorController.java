@@ -4,12 +4,11 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.ist.authors.dto.AuthorDto;
 import ru.ist.authors.dto.NewAuthorDto;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/authors")
@@ -22,5 +21,11 @@ public class AuthorController {
     @SecurityRequirement(name = "Bearer Authentication")
     public AuthorDto addAuthor(Authentication auth, @RequestBody NewAuthorDto authorDto) {
         return authorService.addAuthor(authorDto);
+    }
+
+    @GetMapping("/{authorId}")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public AuthorDto getAuthorById(Authentication auth, @PathVariable UUID authorId) {
+        return authorService.getAuthorById(authorId);
     }
 }

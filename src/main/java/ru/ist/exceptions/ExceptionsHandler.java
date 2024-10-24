@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.ist.authors.exception.AuthorNotFoundException;
 import ru.ist.exceptions.baseExceptions.ForbiddenException;
 import ru.ist.exceptions.model.ApiError;
 import ru.ist.users.exception.UserNotFoundException;
@@ -23,7 +24,8 @@ public class ExceptionsHandler {
     }
 
     @ExceptionHandler({
-            UserNotFoundException.class
+            UserNotFoundException.class,
+            AuthorNotFoundException.class
     })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiError entityNotFoundExceptionHandler(Exception e) {
