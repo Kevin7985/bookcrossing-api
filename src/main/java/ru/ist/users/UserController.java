@@ -5,10 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import ru.ist.users.dto.LogDataDto;
-import ru.ist.users.dto.NewUserDto;
-import ru.ist.users.dto.UserDto;
-import ru.ist.users.dto.UserLoginDto;
+import ru.ist.users.dto.*;
 
 import java.util.UUID;
 
@@ -29,27 +26,31 @@ public class UserController {
         return userService.createUser(userDto);
     }
 
-    @GetMapping("/{user_id}")
+    @GetMapping("/{userId}")
     @SecurityRequirement(name = "Bearer Authentication")
-    public UserDto getUserById(Authentication auth, @PathVariable UUID user_id) {
-        return userService.getUserById(user_id);
+    public UserDto getUserById(Authentication auth, @PathVariable UUID userId) {
+        return userService.getUserById(userId);
     }
 
-    @PatchMapping("/{user_id}")
+    @PatchMapping("/{userId}")
     @SecurityRequirement(name = "Bearer Authentication")
-    public UserDto updateUserById(Authentication auth, @PathVariable UUID user_id) {
+    public UserDto updateUserById(Authentication auth, @PathVariable UUID userId) {
         return null;
     }
 
-    @PatchMapping("/{user_id}/change-password")
+    @PatchMapping("/{userId}/change-password")
     @SecurityRequirement(name = "Bearer Authentication")
-    public UserDto updateUserPasswordById(Authentication auth, @PathVariable UUID user_id) {
-        return null;
+    public UserDto updateUserPasswordById(
+            Authentication auth,
+            @PathVariable UUID userId,
+            @RequestBody UpdateUserPasswordDto userDto
+    ) {
+        return userService.updatePasswordByUserId(auth, userId, userDto);
     }
 
-    @DeleteMapping("/{user_id}")
+    @DeleteMapping("/{userId}")
     @SecurityRequirement(name = "Bearer Authentication")
-    public void deleteUserById(Authentication auth, @PathVariable UUID user_id) {
-        userService.deleteUserById(auth, user_id);
+    public void deleteUserById(Authentication auth, @PathVariable UUID userId) {
+        userService.deleteUserById(auth, userId);
     }
 }
