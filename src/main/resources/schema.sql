@@ -14,3 +14,11 @@ CREATE TABLE IF NOT EXISTS users (
     CONSTRAINT UQ_USER_LOGIN UNIQUE (login),
     CONSTRAINT UQ_USER_EMAIL UNIQUE (email)
 );
+
+CREATE TABLE IF NOT EXISTS authors (
+    id UUID DEFAULT uuid_generate_v4(),
+    name VARCHAR(512),
+    surname VARCHAR(512),
+    patronymic VARCHAR(512),
+    CONSTRAINT PK_AUTHOR PRIMARY KEY (id)
+);
