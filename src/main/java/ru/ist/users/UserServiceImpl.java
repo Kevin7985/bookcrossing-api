@@ -70,6 +70,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto updateUserById(Authentication auth, UUID userId, UpdateUserDto userDto) {
+        checkUserAuth(auth, userId);
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("Пользователь с данным ID не найден"));
+
+        user.setName(userDto.getName() == null ? user.getName() : userDto.getName());
+        user.setAbout(userDto.getAbout() == null ? user.getAbout() : userDto.getAbout());
+        user.setAvatar(userDto.getAvatar() == null ? user.getAvatar() : userDto.getAvatar());
+        userRepository.save(user);
+
+        redis.opsForValue().getAndDelete("cache_user_" + userId);
+        return getUserById(userId);
+    }
+
+    @Override
     public UserDto updatePasswordByUserId(Authentication auth, UUID userId, UpdateUserPasswordDto userDto) {
         checkUserAuth(auth, userId);
 

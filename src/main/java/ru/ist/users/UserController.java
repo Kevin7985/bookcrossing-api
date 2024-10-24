@@ -34,8 +34,8 @@ public class UserController {
 
     @PatchMapping("/{userId}")
     @SecurityRequirement(name = "Bearer Authentication")
-    public UserDto updateUserById(Authentication auth, @PathVariable UUID userId) {
-        return null;
+    public UserDto updateUserById(Authentication auth, @PathVariable UUID userId, @RequestBody UpdateUserDto userDto) {
+        return userService.updateUserById(auth, userId, userDto);
     }
 
     @PatchMapping("/{userId}/change-password")

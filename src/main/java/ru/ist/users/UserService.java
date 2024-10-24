@@ -9,6 +9,7 @@ public interface UserService {
     UserLoginDto authUser(LogDataDto logDataDto);
     UserDto createUser(NewUserDto userDto);
     UserDto getUserById(UUID userId);
+    UserDto updateUserById(Authentication auth, UUID userId, UpdateUserDto userDto);
     UserDto updatePasswordByUserId(Authentication auth, UUID userId, UpdateUserPasswordDto userDto);
     void deleteUserById(Authentication auth, UUID userId);
 }
