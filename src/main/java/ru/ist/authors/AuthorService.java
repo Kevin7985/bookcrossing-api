@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface AuthorService {
     AuthorDto addAuthor(NewAuthorDto authorDto);
-    Response<AuthorDto> searchAuthors(Integer from, Integer size);
+    Response<AuthorDto> searchAuthors(String search, Integer from, Integer size);
     AuthorDto getAuthorById(UUID authorId);
     void deleteAuthorById(UUID authorId);
 }

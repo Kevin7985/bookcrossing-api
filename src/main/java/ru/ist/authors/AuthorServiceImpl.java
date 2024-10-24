@@ -39,7 +39,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Response<AuthorDto> searchAuthors(Integer from, Integer size) {
+    public Response<AuthorDto> searchAuthors(String search, Integer from, Integer size) {
         List<AuthorDto> authorList = new ArrayList<>();
         Pageable pageable;
         Sort sort = Sort.by(Sort.Direction.ASC, "id");
@@ -48,7 +48,13 @@ public class AuthorServiceImpl implements AuthorService {
 
         for (int i = pager.getPageStart(); i < pager.getPagesAmount(); i++) {
             pageable = PageRequest.of(i, pager.getPageSize(), sort);
-            page = authorRepository.findAll(pageable);
+
+            if (search == null) {
+                page = authorRepository.findAll(pageable);
+            } else {
+                page = authorRepository.search(search, pageable);
+            }
+
             authorList.addAll(page.stream()
                     .map(mapperService::toAuthorDto)
                     .toList()

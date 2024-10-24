@@ -30,10 +30,11 @@ public class AuthorController {
     @SecurityRequirement(name = "Bearer Authentication")
     public Response<AuthorDto> searchAuthors(
             Authentication auth,
+            @RequestParam(required = false) String search,
             @RequestParam(defaultValue = "0") @Min(0) Integer from,
             @RequestParam(defaultValue = "20") @Min(1) @Max(100) Integer size
     ) {
-        return authorService.searchAuthors(from, size);
+        return authorService.searchAuthors(search, from, size);
     }
 
     @GetMapping("/{authorId}")
